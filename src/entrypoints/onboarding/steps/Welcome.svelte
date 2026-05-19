@@ -136,7 +136,7 @@
   }
 
   .tagline {
-    font-size: 0.9375rem;
+    font-size: 0.875rem;
     color: var(--st-text-secondary);
     max-width: 400px;
     margin: 0 auto;
@@ -156,7 +156,7 @@
     padding: 16px;
     background: var(--st-bg-secondary);
     border: 1px solid var(--st-border);
-    border-radius: 10px;
+    border-radius: 0.25rem;
     text-align: left;
   }
 
@@ -169,12 +169,12 @@
     justify-content: center;
     background: var(--st-brand-surface);
     color: var(--st-brand);
-    border-radius: 8px;
+    border-radius: 0.25rem;
   }
 
   .feature-text h3 {
     font-size: 0.8125rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--st-text);
     margin-bottom: 4px;
   }
@@ -195,19 +195,21 @@
   .primary-btn {
     width: 100%;
     max-width: 320px;
-    padding: 12px 24px;
+    height: 3rem;
+    padding: 0 1rem;
     background: var(--st-btn-bg);
-    color: #fff;
+    color: var(--st-btn-text);
     border: 2px solid var(--st-btn-border);
-    border-radius: 8px;
-    font-size: 0.9375rem;
-    font-weight: 600;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
     transition: background 0.15s ease;
   }
 
   .primary-btn:hover {
     background: var(--st-btn-hover-bg);
+    color: #fff;
   }
 
   .skip-btn {

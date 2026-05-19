@@ -29,6 +29,10 @@ export const CONFIG: Config = {
 
   // Text limits
   MAX_TEXT_LENGTH: 5000,
+
+  // Selection
+  SELECTION_DEBOUNCE: 250,
+  MIN_SELECTION_LENGTH: 3,
 };
 
 /**

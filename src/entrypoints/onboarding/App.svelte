@@ -147,36 +147,44 @@
     --st-shadow: rgba(0, 0, 0, 0.08);
     --st-overlay: rgba(0, 0, 0, 0.3);
     --st-focus-ring: #6b16ed;
-    --st-btn-bg: #5a12c7;
+    --st-btn-bg: #f5f0ff;
     --st-btn-hover-bg: #6b16ed;
-    --st-btn-border: #8b5cf6;
-    --st-select-arrow: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23737373' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --st-btn-border: #6b16ed;
+    --st-btn-text: #5a12c7;
+    --st-disabled-bg: #f5f5f5;
+    --st-disabled-border: #d4d4d4;
+    --st-disabled-text: #525252;
+    --st-select-arrow: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 5L6 2L9 5' stroke='%23000000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M3 7L6 10L9 7' stroke='%23000000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
 
   :global(:root[data-theme='dark']) {
-    --st-bg: #1a1a1a;
-    --st-bg-secondary: #262626;
-    --st-bg-elevated: #2a2a2a;
-    --st-text: #e5e5e5;
+    --st-bg: #000000;
+    --st-bg-secondary: #181818;
+    --st-bg-elevated: #202020;
+    --st-text: #ffffff;
     --st-text-secondary: #a3a3a3;
     --st-text-muted: #525252;
-    --st-border: #404040;
-    --st-brand: #8b5cf6;
-    --st-brand-dark: #7c3aed;
-    --st-brand-surface: #2d1b69;
-    --st-brand-surface-alt: #231554;
-    --st-brand-text: #c4b5fd;
+    --st-border: #242424;
+    --st-brand: #fcd452;
+    --st-brand-dark: #fcd452;
+    --st-brand-surface: rgba(252, 212, 82, 0.12);
+    --st-brand-surface-alt: rgba(252, 212, 82, 0.08);
+    --st-brand-text: #fcd452;
     --st-success: #4ade80;
     --st-warning-surface: #422006;
     --st-warning-border: #854d0e;
     --st-warning-text: #fde047;
     --st-shadow: rgba(0, 0, 0, 0.3);
     --st-overlay: rgba(0, 0, 0, 0.5);
-    --st-focus-ring: #8b5cf6;
-    --st-btn-bg: #2d1b69;
-    --st-btn-hover-bg: #8b5cf6;
-    --st-btn-border: #8b5cf6;
-    --st-select-arrow: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23a3a3a3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --st-focus-ring: #fcd452;
+    --st-btn-bg: rgba(107, 22, 237, 0.2);
+    --st-btn-hover-bg: #7317ff;
+    --st-btn-border: #7317ff;
+    --st-btn-text: #ffffff;
+    --st-disabled-bg: rgba(24, 24, 24, 0.6);
+    --st-disabled-border: #242424;
+    --st-disabled-text: #a3a3a3;
+    --st-select-arrow: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 5L6 2L9 5' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M3 7L6 10L9 7' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
 
   :global(html),
@@ -189,6 +197,7 @@
     min-height: 100vh;
     padding: 0;
     font-family:
+      'Geist Sans',
       Inter,
       -apple-system,
       BlinkMacSystemFont,
@@ -208,9 +217,10 @@
     align-items: center;
     gap: 6px;
     background: var(--st-bg-secondary);
-    border: 1px solid var(--st-border);
-    border-radius: 6px;
-    padding: 6px 12px;
+    border: 2px solid var(--st-border);
+    border-radius: 0.25rem;
+    height: 2rem;
+    padding: 0 0.5rem;
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--st-text-secondary);
@@ -246,7 +256,7 @@
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
     background: var(--st-bg-secondary);
     color: var(--st-text-muted);
     border: 2px solid var(--st-border);
@@ -259,8 +269,12 @@
     border-color: var(--st-brand);
   }
 
+  :global(:root[data-theme='dark']) .progress-step.active .step-dot {
+    color: #000000;
+  }
+
   .progress-step.current .step-dot {
-    box-shadow: 0 0 0 3px var(--st-brand-surface);
+    box-shadow: 0 0 0 2px var(--st-focus-ring);
   }
 
   .step-label {

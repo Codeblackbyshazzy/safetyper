@@ -29,25 +29,29 @@
   --st-drag-dots: #d4d4d4;
   --st-loading-text: #374151;
   --st-focus-ring: #6b16ed;
-  --st-btn-bg: #6b16ed;
-  --st-btn-hover-bg: #5a12c7;
+  --st-btn-bg: #f5f0ff;
+  --st-btn-hover-bg: #6b16ed;
   --st-btn-border: #6b16ed;
+  --st-btn-text: #5a12c7;
+  --st-disabled-bg: #f5f5f5;
+  --st-disabled-border: #d4d4d4;
+  --st-disabled-text: #525252;
 }
 
 /* Dark theme */
 .safetyper-popup[data-theme='dark'],
 .safetyper-icon[data-theme='dark'],
 .safetyper-mirror[data-theme='dark'] {
-  --st-bg: #1a1a1a;
-  --st-bg-secondary: #262626;
-  --st-text: #e5e5e5;
+  --st-bg: #101010;
+  --st-bg-secondary: #181818;
+  --st-text: #ffffff;
   --st-text-secondary: #a3a3a3;
   --st-text-muted: #525252;
-  --st-border: #404040;
-  --st-brand: #8b5cf6;
-  --st-brand-dark: #7c3aed;
-  --st-brand-surface: #2d1b69;
-  --st-brand-text: #c4b5fd;
+  --st-border: #242424;
+  --st-brand: #fcd452;
+  --st-brand-dark: #fcd452;
+  --st-brand-surface: rgba(252, 212, 82, 0.12);
+  --st-brand-text: #fcd452;
   --st-success: #4ade80;
   --st-success-text: #86efac;
   --st-success-surface: #14532d;
@@ -56,18 +60,22 @@
   --st-warning-surface: #422006;
   --st-warning-border: #854d0e;
   --st-warning-text: #fde047;
-  --st-diff-bg: rgba(139, 92, 246, 0.15);
+  --st-diff-bg: rgba(252, 212, 82, 0.12);
   --st-diff-original: #f87171;
   --st-diff-corrected: #86efac;
   --st-shadow: rgba(0, 0, 0, 0.4);
   --st-scrollbar-track: #333333;
-  --st-scrollbar-thumb: #8b5cf6;
+  --st-scrollbar-thumb: #fcd452;
   --st-drag-dots: #e5e5e5;
   --st-loading-text: #9ca3af;
-  --st-focus-ring: #8b5cf6;
-  --st-btn-bg: #2d1b69;
-  --st-btn-hover-bg: #8b5cf6;
-  --st-btn-border: #8b5cf6;
+  --st-focus-ring: #fcd452;
+  --st-btn-bg: rgba(107, 22, 237, 0.2);
+  --st-btn-hover-bg: #7317ff;
+  --st-btn-border: #7317ff;
+  --st-btn-text: #ffffff;
+  --st-disabled-bg: rgba(24, 24, 24, 0.6);
+  --st-disabled-border: #242424;
+  --st-disabled-text: #a3a3a3;
 }
 
 .popup-header {
@@ -128,14 +136,27 @@
   display: none;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: none;
+  background: #000000;
+  border: 1px solid var(--st-border);
+  border-radius: 50% !important;
+  overflow: hidden;
   box-shadow: none;
-  transition: transform 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.safetyper-icon[data-theme='dark'] {
+  border-color: var(--st-border);
 }
 
 .safetyper-icon:hover {
   transform: scale(1.05);
+  background: #000000;
+}
+
+.safetyper-icon[data-theme='dark']:hover {
+  background: #262626;
 }
 
 .safetyper-popup {
@@ -144,7 +165,7 @@
   background: var(--st-bg);
   border: 1px solid var(--st-border);
   border-radius: 0.25rem;
-  box-shadow: 0 4px 16px var(--st-shadow);
+  box-shadow: none;
   width: 380px;
   max-width: calc(100vw - 20px);
   max-height: calc(100vh - 20px);
@@ -153,6 +174,7 @@
   cursor: grab;
   user-select: none;
   font-family:
+    'Geist Sans',
     Inter,
     -apple-system,
     BlinkMacSystemFont,
@@ -219,6 +241,7 @@
   font-weight: 700;
   color: var(--st-text);
   font-family:
+    'Geist Sans',
     Inter,
     -apple-system,
     BlinkMacSystemFont,
@@ -240,12 +263,13 @@
   font-size: 0.875rem;
   font-weight: 500;
   font-family:
+    'Geist Sans',
     Inter,
     -apple-system,
     BlinkMacSystemFont,
     sans-serif;
   text-transform: none;
-  color: #fff;
+  color: var(--st-btn-text);
   background: var(--st-btn-bg);
   border: 2px solid var(--st-btn-border);
   border-radius: 0.25rem;
@@ -274,6 +298,17 @@
     0 0 0 4px var(--st-focus-ring);
 }
 
+.safetyper-check-btn:disabled,
+.safetyper-apply-btn:disabled,
+.safetyper-copy-btn:disabled,
+.safetyper-settings-btn:disabled,
+.safetyper-close-btn:disabled {
+  border-color: var(--st-disabled-border);
+  background: var(--st-disabled-bg);
+  color: var(--st-disabled-text);
+  cursor: not-allowed;
+}
+
 .popup-actions .safetyper-check-btn {
   flex: 1;
   min-width: 0;
@@ -300,6 +335,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   font-family:
+    'Geist Sans',
     Inter,
     -apple-system,
     BlinkMacSystemFont,
@@ -544,9 +580,10 @@
   --st-border: #e5e5e5;
   --st-shadow: rgba(0, 0, 0, 0.12);
   --st-diff-corrected: #16a34a;
-  --st-btn-bg: #6b16ed;
-  --st-btn-hover-bg: #5a12c7;
+  --st-btn-bg: #f5f0ff;
+  --st-btn-hover-bg: #6b16ed;
   --st-btn-border: #6b16ed;
+  --st-btn-text: #5a12c7;
   --st-bg-secondary: #f5f5f5;
   --st-focus-ring: #6b16ed;
 
@@ -554,10 +591,11 @@
   z-index: 999999;
   background: var(--st-bg);
   border: 1px solid var(--st-border);
-  border-radius: 6px;
+  border-radius: 0.25rem;
   padding: 8px 12px;
-  box-shadow: 0 2px 8px var(--st-shadow);
+  box-shadow: none;
   font-family:
+    'Geist Sans',
     Inter,
     -apple-system,
     BlinkMacSystemFont,
@@ -570,16 +608,17 @@
 }
 
 .safetyper-tooltip[data-theme='dark'] {
-  --st-bg: #1a1a1a;
-  --st-text: #e5e5e5;
-  --st-border: #404040;
+  --st-bg: #101010;
+  --st-text: #ffffff;
+  --st-border: #242424;
   --st-shadow: rgba(0, 0, 0, 0.4);
   --st-diff-corrected: #86efac;
-  --st-btn-bg: #2d1b69;
-  --st-btn-hover-bg: #8b5cf6;
-  --st-btn-border: #8b5cf6;
-  --st-bg-secondary: #262626;
-  --st-focus-ring: #8b5cf6;
+  --st-btn-bg: rgba(107, 22, 237, 0.2);
+  --st-btn-hover-bg: #7317ff;
+  --st-btn-border: #7317ff;
+  --st-btn-text: #ffffff;
+  --st-bg-secondary: #181818;
+  --st-focus-ring: #fcd452;
 }
 
 .safetyper-tooltip-text {
@@ -599,7 +638,7 @@
   padding: 2px 8px;
   height: 24px;
   background: var(--st-btn-bg);
-  color: #fff;
+  color: var(--st-btn-text);
   border: 1px solid var(--st-btn-border);
   border-radius: 4px;
   cursor: pointer;
@@ -637,14 +676,24 @@
 /* Manual copy textarea */
 .manual-copy-text {
   width: 100%;
-  min-height: 80px;
-  font-size: 13px;
-  padding: 8px;
-  border: 1px solid var(--st-border);
-  border-radius: 4px;
+  min-height: 8rem;
+  padding: 0.375rem 0.75rem;
+  border: 0;
+  border-radius: 0.25rem;
   resize: vertical;
   background: var(--st-bg);
   color: var(--st-text);
-  font-family: inherit;
+  box-shadow:
+    inset 4px 0 0 transparent,
+    inset 0 0 0 2px var(--st-border);
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.875rem;
   box-sizing: border-box;
+}
+
+.manual-copy-text:focus {
+  outline: none;
+  box-shadow:
+    inset 4px 0 0 var(--st-focus-ring),
+    inset 0 0 0 2px var(--st-border);
 }

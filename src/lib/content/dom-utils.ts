@@ -258,6 +258,99 @@ export function escapeHtml(text: string): string {
 }
 
 /**
+ * Calculate icon position relative to a text selection Range
+ */
+export function calculateSelectionIconPosition(range: Range): Position {
+  const rect = range.getBoundingClientRect();
+  const iconSize = CONFIG.ICON_SIZE;
+
+  let left = rect.right + 4;
+  let top = rect.bottom - iconSize;
+
+  // Keep within viewport
+  if (left + iconSize > window.innerWidth) {
+    left = rect.right - iconSize - 4;
+  }
+  if (top < 0) {
+    top = rect.top;
+  }
+  if (top + iconSize > window.innerHeight) {
+    top = window.innerHeight - iconSize - 4;
+  }
+
+  return { left, top };
+}
+
+/**
+ * Check if a Selection is inside an editable element
+ */
+export function isSelectionInEditableArea(selection: Selection): boolean {
+  if (!selection.rangeCount) return false;
+  const range = selection.getRangeAt(0);
+  const container = range.commonAncestorContainer;
+  const element =
+    container.nodeType === Node.TEXT_NODE ? container.parentElement : (container as HTMLElement);
+  if (!element) return false;
+  return (
+    isEditableElement(element) ||
+    !!element.closest('[contenteditable="true"]') ||
+    element instanceof HTMLInputElement ||
+    element instanceof HTMLTextAreaElement
+  );
+}
+
+/**
+ * Walk up the DOM to find the nearest editable ancestor
+ */
+export function findEditableAncestor(node: Node): HTMLElement | null {
+  let current: Node | null = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+  while (current && current instanceof HTMLElement) {
+    if (isEditableElement(current)) return current;
+    current = current.parentElement;
+  }
+  return null;
+}
+
+/**
+ * Replace selected text in an input or textarea using setRangeText
+ */
+export function replaceSelectedTextInInput(
+  element: HTMLInputElement | HTMLTextAreaElement,
+  selectionStart: number,
+  selectionEnd: number,
+  replacement: string
+): void {
+  element.focus();
+  element.setSelectionRange(selectionStart, selectionEnd);
+  element.setRangeText(replacement, selectionStart, selectionEnd, 'end');
+  element.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+/**
+ * Replace content at a saved Range in a contenteditable element
+ */
+export function replaceSelectedTextInContentEditable(
+  savedRange: Range,
+  replacement: string
+): void {
+  const selection = window.getSelection();
+  if (!selection) return;
+
+  selection.removeAllRanges();
+  selection.addRange(savedRange);
+
+  savedRange.deleteContents();
+  const textNode = document.createTextNode(replacement);
+  savedRange.insertNode(textNode);
+
+  // Move cursor to end of inserted text
+  savedRange.setStartAfter(textNode);
+  savedRange.setEndAfter(textNode);
+  selection.removeAllRanges();
+  selection.addRange(savedRange);
+}
+
+/**
  * Check if element position has changed significantly
  */
 export function hasPositionChanged(

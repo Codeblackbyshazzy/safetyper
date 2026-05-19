@@ -120,6 +120,11 @@ export interface Position {
 }
 
 /**
+ * Interaction mode for the content script
+ */
+export type InteractionMode = 'focus' | 'selection';
+
+/**
  * Content script state
  */
 export interface ContentScriptState {
@@ -133,6 +138,13 @@ export interface ContentScriptState {
   typingSpeedHistory: number[];
   cachedPosition: Position | null;
   lastInputRect: DOMRect | null;
+  interactionMode: InteractionMode;
+  selectedText: string | null;
+  selectedRange: Range | null;
+  selectionInEditable: boolean;
+  selectionAnchorElement: HTMLElement | null;
+  selectionStartOffset: number | null;
+  selectionEndOffset: number | null;
 }
 
 /**
@@ -149,6 +161,8 @@ export interface Config {
   ICON_OFFSET: number;
   BLUR_DELAY: number;
   MAX_TEXT_LENGTH: number;
+  SELECTION_DEBOUNCE: number;
+  MIN_SELECTION_LENGTH: number;
 }
 
 /**

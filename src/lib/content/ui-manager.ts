@@ -10,10 +10,13 @@ import { generateDiffHtml } from './diff-engine';
 import {
   calculateIconPosition,
   calculatePopupPosition,
+  calculateSelectionIconPosition,
   getTextContent,
   setTextContent,
   isComplexEditor,
   escapeHtml,
+  replaceSelectedTextInInput,
+  replaceSelectedTextInContentEditable,
 } from './dom-utils';
 
 // Track document-level listeners for cleanup
@@ -71,6 +74,8 @@ export function createIcon(): HTMLDivElement {
   iconImg.style.imageRendering = 'pixelated';
   iconContainer.appendChild(iconImg);
 
+  // Preserve native selection: prevent focus shift when clicking the icon
+  iconContainer.addEventListener('mousedown', (e) => e.preventDefault());
   iconContainer.addEventListener('click', showPopup);
   iconContainer.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -158,6 +163,29 @@ export function hideIcon(): void {
   if (iconContainer) {
     iconContainer.style.display = 'none';
   }
+}
+
+/**
+ * Position icon near a text selection Range
+ */
+export function positionIconAtSelection(range: Range): void {
+  const iconContainer = stateManager.getIconContainer();
+  if (!iconContainer) return;
+
+  const position = calculateSelectionIconPosition(range);
+  const cachedPosition = stateManager.getCachedPosition();
+
+  if (
+    !cachedPosition ||
+    cachedPosition.left !== position.left ||
+    cachedPosition.top !== position.top
+  ) {
+    iconContainer.style.left = `${position.left}px`;
+    iconContainer.style.top = `${position.top}px`;
+    stateManager.setCachedPosition(position);
+  }
+
+  iconContainer.style.display = 'flex';
 }
 
 /**
@@ -360,6 +388,13 @@ function makePopupDraggable(popupElement: HTMLDivElement): void {
   }
 
   popupElement.addEventListener('mousedown', dragStart);
+  // Preserve native selection: prevent focus shift when clicking popup buttons
+  popupElement.addEventListener('mousedown', (e) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest('button, .safetyper-icon-btn')) {
+      e.preventDefault();
+    }
+  });
   document.addEventListener('mouseup', dragEnd);
   document.addEventListener('mousemove', drag);
 
@@ -433,17 +468,46 @@ function constrainPopupToViewport(popup: HTMLElement): void {
  * Handle grammar check button click
  */
 async function handleGrammarCheck(): Promise<void> {
-  const activeInput = stateManager.getActiveInput();
-  if (!activeInput) return;
+  let mode = stateManager.getInteractionMode();
+  let text: string;
+  let activeInput: HTMLElement | null = null;
 
-  const text = getTextContent(activeInput);
+  if (mode === 'selection') {
+    text = stateManager.getSelectedText() || '';
+  } else {
+    activeInput = stateManager.getActiveInput();
+    if (!activeInput) return;
+
+    // Check if the input/textarea has a text selection — the selectionchange
+    // debounce may not have fired yet, so detect selection directly.
+    if (activeInput instanceof HTMLInputElement || activeInput instanceof HTMLTextAreaElement) {
+      const start = activeInput.selectionStart;
+      const end = activeInput.selectionEnd;
+      if (start !== null && end !== null && start !== end) {
+        text = activeInput.value.substring(start, end);
+        // Treat as selection mode for apply-changes logic
+        mode = 'selection';
+        stateManager.setInteractionMode('selection');
+        stateManager.setSelectedText(text);
+        stateManager.setSelectionInEditable(true);
+        stateManager.setSelectionAnchorElement(activeInput);
+        stateManager.setSelectionStartOffset(start);
+        stateManager.setSelectionEndOffset(end);
+      } else {
+        text = getTextContent(activeInput);
+      }
+    } else {
+      text = getTextContent(activeInput);
+    }
+  }
+
   if (!text.trim()) {
     const popup = stateManager.getPopup();
     if (popup) {
       const content = popup.querySelector('.safetyper-popup-content');
       if (content) {
         content.innerHTML = `
-          <p class="popup-description error-message">Please enter some text to check grammar.</p>
+          <p class="popup-description error-message">Please select some text to check grammar.</p>
           <div class="popup-actions">
             <button class="safetyper-close-btn">Close</button>
           </div>
@@ -494,16 +558,30 @@ async function handleGrammarCheck(): Promise<void> {
       // Ensure popup stays within viewport after content update
       setTimeout(() => constrainPopupToViewport(currentPopup), 0);
     } else {
-      // Show diff
-      const isComplex = activeInput && isComplexEditor(activeInput);
-      const buttonsHtml = isComplex
-        ? '<button class="safetyper-copy-btn">Copy to Clipboard</button>'
-        : `
+      // Determine which buttons to show based on interaction mode
+      let canApply = false;
+      let isComplex = false;
+
+      if (mode === 'selection') {
+        const inEditable = stateManager.isSelectionInEditable();
+        if (inEditable) {
+          const anchorEl = stateManager.getSelectionAnchorElement();
+          isComplex = !!anchorEl && isComplexEditor(anchorEl);
+          canApply = !isComplex;
+        }
+      } else {
+        isComplex = !!activeInput && isComplexEditor(activeInput);
+        canApply = !isComplex;
+      }
+
+      const buttonsHtml = canApply
+        ? `
           <div class="button-group">
             <button class="safetyper-apply-btn">Apply Changes</button>
             <button class="safetyper-copy-btn">Copy to Clipboard</button>
           </div>
-        `;
+        `
+        : '<button class="safetyper-copy-btn">Copy to Clipboard</button>';
 
       const instructions = isComplex
         ? '<p class="editor-instruction">Complex editor detected. Copy the text and paste it manually to preserve formatting.</p>'
@@ -531,7 +609,22 @@ async function handleGrammarCheck(): Promise<void> {
 
       if (applyBtn) {
         applyBtn.addEventListener('click', () => {
-          if (activeInput) {
+          if (mode === 'selection') {
+            const anchorEl = stateManager.getSelectionAnchorElement();
+            const savedRange = stateManager.getSelectedRange();
+            if (
+              anchorEl instanceof HTMLInputElement ||
+              anchorEl instanceof HTMLTextAreaElement
+            ) {
+              const start = stateManager.getSelectionStartOffset();
+              const end = stateManager.getSelectionEndOffset();
+              if (start !== null && end !== null) {
+                replaceSelectedTextInInput(anchorEl, start, end, correctedText);
+              }
+            } else if (savedRange) {
+              replaceSelectedTextInContentEditable(savedRange, correctedText);
+            }
+          } else if (activeInput) {
             setTextContent(activeInput, correctedText);
           }
           closePopup();

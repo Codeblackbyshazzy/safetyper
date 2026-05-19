@@ -447,7 +447,14 @@
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M3 4.5L6 7.5L9 4.5"
+              d="M3 5L6 2L9 5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M3 7L6 10L9 7"
               stroke="currentColor"
               stroke-width="1.5"
               stroke-linecap="round"
@@ -531,7 +538,7 @@
 
   .field label {
     font-size: 0.8125rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--st-text);
   }
 
@@ -544,29 +551,49 @@
   .select,
   .input {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--st-border);
-    border-radius: 8px;
+    min-height: 2rem;
+    padding: 0.375rem 0.75rem;
+    border: 0;
+    border-radius: 0.25rem;
+    box-shadow:
+      inset 4px 0 0 transparent,
+      inset 0 0 0 2px var(--st-border);
     font-size: 0.875rem;
     background: var(--st-bg);
     color: var(--st-text);
     font-family: inherit;
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: box-shadow 0.15s ease;
   }
 
   .select {
     appearance: none;
     background-image: var(--st-select-arrow);
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
+    background-position: right 0.5rem center;
+    padding-left: 0.5rem;
+    padding-right: 2.5rem;
   }
 
   .select:focus,
   .input:focus {
-    border-color: var(--st-brand);
-    box-shadow: 0 0 0 2px var(--st-brand-surface);
+    box-shadow:
+      inset 4px 0 0 var(--st-focus-ring),
+      inset 0 0 0 2px var(--st-border);
+  }
+
+  .input::placeholder,
+  .combobox-input::placeholder {
+    color: var(--st-placeholder);
+  }
+
+  .input:disabled,
+  .select:disabled,
+  .input:read-only {
+    background: var(--st-disabled-bg);
+    color: var(--st-disabled-text);
+    box-shadow: none;
+    cursor: not-allowed;
   }
 
   .help-text {
@@ -630,20 +657,25 @@
 
   .combobox-input {
     width: 100%;
-    padding: 10px 36px 10px 12px;
-    border: 1px solid var(--st-border);
-    border-radius: 8px;
+    min-height: 2rem;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    border: 0;
+    border-radius: 0.25rem;
+    box-shadow:
+      inset 4px 0 0 transparent,
+      inset 0 0 0 2px var(--st-border);
     font-size: 0.875rem;
     background: var(--st-bg);
     color: var(--st-text);
     font-family: inherit;
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: box-shadow 0.15s ease;
   }
 
   .combobox-input:focus {
-    border-color: var(--st-brand);
-    box-shadow: 0 0 0 2px var(--st-brand-surface);
+    box-shadow:
+      inset 4px 0 0 var(--st-focus-ring),
+      inset 0 0 0 2px var(--st-border);
   }
 
   .combobox-toggle {
@@ -668,33 +700,34 @@
     margin-top: 4px;
     max-height: 200px;
     overflow-y: auto;
-    background: var(--st-bg-elevated);
-    border: 1px solid var(--st-border);
-    border-radius: 8px;
+    background: var(--st-menu-bg);
+    border: 1px solid var(--st-menu-border);
+    border-radius: 0.25rem;
     list-style: none;
     padding: 4px;
     z-index: 10;
-    box-shadow: 0 4px 12px var(--st-shadow);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   }
 
   .combobox-list li {
     padding: 8px 10px;
-    border-radius: 6px;
+    border-radius: 0.25rem;
     cursor: pointer;
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: var(--st-text);
     transition: background 0.1s ease;
   }
 
   .combobox-list li:hover,
   .combobox-list li.highlighted {
-    background: var(--st-bg-secondary);
+    background: var(--st-option-hover-bg);
+    color: var(--st-option-hover-text);
   }
 
   .combobox-list li.selected {
-    background: var(--st-brand-surface);
-    color: var(--st-brand-text);
-    font-weight: 500;
+    background: var(--st-selected-bg);
+    color: var(--st-selected-text);
+    font-weight: 600;
   }
 
   .combobox-list li.no-results {
@@ -720,24 +753,28 @@
 
   .primary-btn {
     width: 100%;
-    padding: 12px 24px;
+    height: 3rem;
+    padding: 0 1rem;
     background: var(--st-btn-bg);
-    color: #fff;
+    color: var(--st-btn-text);
     border: 2px solid var(--st-btn-border);
-    border-radius: 8px;
-    font-size: 0.9375rem;
-    font-weight: 600;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
     transition: background 0.15s ease;
   }
 
   .primary-btn:hover:not(:disabled) {
     background: var(--st-btn-hover-bg);
+    color: #fff;
   }
 
   .primary-btn:disabled {
-    opacity: 0.6;
-    cursor: default;
+    border-color: var(--st-disabled-border);
+    background: var(--st-disabled-bg);
+    color: var(--st-disabled-text);
+    cursor: not-allowed;
   }
 
   .secondary-actions {
@@ -746,11 +783,12 @@
   }
 
   .secondary-btn {
-    padding: 8px 16px;
-    background: var(--st-bg-secondary);
+    height: 2rem;
+    padding: 0 0.5rem;
+    background: var(--st-bg);
     color: var(--st-text);
-    border: 1px solid var(--st-border);
-    border-radius: 6px;
+    border: 2px solid var(--st-border);
+    border-radius: 0.25rem;
     font-size: 0.8125rem;
     font-weight: 500;
     cursor: pointer;
@@ -758,17 +796,20 @@
   }
 
   .secondary-btn.small {
-    padding: 6px 12px;
+    height: 2rem;
+    padding: 0 0.5rem;
     font-size: 0.75rem;
   }
 
   .secondary-btn:hover:not(:disabled) {
-    background: var(--st-bg-elevated);
+    background: var(--st-bg-secondary);
   }
 
   .secondary-btn:disabled {
-    opacity: 0.5;
-    cursor: default;
+    border-color: var(--st-disabled-border);
+    background: var(--st-disabled-bg);
+    color: var(--st-disabled-text);
+    cursor: not-allowed;
   }
 
   .text-btn {

@@ -2,7 +2,7 @@
  * State management for SafeTyper content script
  */
 
-import type { ContentScriptState, Position } from './types';
+import type { ContentScriptState, InteractionMode, Position } from './types';
 import { CONFIG } from './config';
 
 /**
@@ -20,6 +20,13 @@ export function createState(): ContentScriptState {
     typingSpeedHistory: [],
     cachedPosition: null,
     lastInputRect: null,
+    interactionMode: 'focus',
+    selectedText: null,
+    selectedRange: null,
+    selectionInEditable: false,
+    selectionAnchorElement: null,
+    selectionStartOffset: null,
+    selectionEndOffset: null,
   };
 }
 
@@ -120,6 +127,73 @@ export class StateManager {
 
   setLastInputRect(rect: DOMRect | null): void {
     this.state.lastInputRect = rect;
+  }
+
+  // Selection state
+  getInteractionMode(): InteractionMode {
+    return this.state.interactionMode;
+  }
+
+  setInteractionMode(mode: InteractionMode): void {
+    this.state.interactionMode = mode;
+  }
+
+  getSelectedText(): string | null {
+    return this.state.selectedText;
+  }
+
+  setSelectedText(text: string | null): void {
+    this.state.selectedText = text;
+  }
+
+  getSelectedRange(): Range | null {
+    return this.state.selectedRange;
+  }
+
+  setSelectedRange(range: Range | null): void {
+    this.state.selectedRange = range;
+  }
+
+  isSelectionInEditable(): boolean {
+    return this.state.selectionInEditable;
+  }
+
+  setSelectionInEditable(value: boolean): void {
+    this.state.selectionInEditable = value;
+  }
+
+  getSelectionAnchorElement(): HTMLElement | null {
+    return this.state.selectionAnchorElement;
+  }
+
+  setSelectionAnchorElement(element: HTMLElement | null): void {
+    this.state.selectionAnchorElement = element;
+  }
+
+  getSelectionStartOffset(): number | null {
+    return this.state.selectionStartOffset;
+  }
+
+  setSelectionStartOffset(offset: number | null): void {
+    this.state.selectionStartOffset = offset;
+  }
+
+  getSelectionEndOffset(): number | null {
+    return this.state.selectionEndOffset;
+  }
+
+  setSelectionEndOffset(offset: number | null): void {
+    this.state.selectionEndOffset = offset;
+  }
+
+  clearSelectionState(): void {
+    this.state.interactionMode = 'focus';
+    this.state.selectedText = null;
+    this.state.selectedRange = null;
+    this.state.selectionInEditable = false;
+    this.state.selectionAnchorElement = null;
+    this.state.selectionStartOffset = null;
+    this.state.selectionEndOffset = null;
   }
 
   /**

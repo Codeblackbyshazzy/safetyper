@@ -4,9 +4,11 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
   font-family:
+    'Geist Sans',
     Inter,
     -apple-system,
     BlinkMacSystemFont,
