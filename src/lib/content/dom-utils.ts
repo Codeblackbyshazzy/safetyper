@@ -329,10 +329,7 @@ export function replaceSelectedTextInInput(
 /**
  * Replace content at a saved Range in a contenteditable element
  */
-export function replaceSelectedTextInContentEditable(
-  savedRange: Range,
-  replacement: string
-): void {
+export function replaceSelectedTextInContentEditable(savedRange: Range, replacement: string): void {
   const selection = window.getSelection();
   if (!selection) return;
 

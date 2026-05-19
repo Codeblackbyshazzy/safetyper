@@ -234,10 +234,7 @@ export default defineContentScript({
         // --- Input / Textarea path ---
         // window.getSelection() doesn't reflect selections inside form controls,
         // so we check .selectionStart / .selectionEnd directly.
-        if (
-          activeEl instanceof HTMLInputElement ||
-          activeEl instanceof HTMLTextAreaElement
-        ) {
+        if (activeEl instanceof HTMLInputElement || activeEl instanceof HTMLTextAreaElement) {
           if (!isEditableElement(activeEl)) return;
           const start = activeEl.selectionStart;
           const end = activeEl.selectionEnd;

@@ -612,10 +612,7 @@ async function handleGrammarCheck(): Promise<void> {
           if (mode === 'selection') {
             const anchorEl = stateManager.getSelectionAnchorElement();
             const savedRange = stateManager.getSelectedRange();
-            if (
-              anchorEl instanceof HTMLInputElement ||
-              anchorEl instanceof HTMLTextAreaElement
-            ) {
+            if (anchorEl instanceof HTMLInputElement || anchorEl instanceof HTMLTextAreaElement) {
               const start = stateManager.getSelectionStartOffset();
               const end = stateManager.getSelectionEndOffset();
               if (start !== null && end !== null) {
